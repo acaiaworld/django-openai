@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chatbot for using ChatGPT in Python | ACAIA</title>
+    <meta name="description" content="موقع محادثة ذكية مثل ChatGPT بلغة بايثون باستخدام OpenAI's GPT-3 ">
+    <link rel="icon" href="https://www.acaiaworld.com/wp-content/uploads/2022/12/cropped-logo12-32x32.png" sizes="32x32">
+    <link rel="icon" href="https://www.acaiaworld.com/wp-content/uploads/2022/12/cropped-logo12-192x192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="https://www.acaiaworld.com/wp-content/uploads/2022/12/cropped-logo12-180x180.png">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <style>
+      html {
+          height: 100%;
+      }
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+
+      body {
+          font-family: 'Poppins', sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+      }
+
+      .wrapper {
+          width: 770px;
+      }
+
+      .wrapper .title {
+          background: #0eaad5;
+          color: white;
+          line-height: 2.5;
+          border-radius: 5px 5px 0 0;
+          text-align: center;
+          font-size: 20px;
+      }
+
+      .wrapper .box {
+          border: 1px solid #efefef;
+          padding: 10px 15px;
+          min-height: 450px;
+          border: 1px solid #efefef;
+          padding: 10px 15px;
+          display: flow-root;
+      }
+
+      .wrapper .box .item {
+          display: flex;
+          float: left;
+          margin: 10px 0;
+      }
+
+      .wrapper .box .item .icon {
+          background: #0eaad5;
+          color: white;
+          width: 40px;
+          height: 40px;
+          text-align: center;
+          line-height: 40px;
+          border-radius: 50%;
+      }
+
+      .wrapper .box .item .msg {
+          background: #0eaad5;
+          color: white;
+          border-radius: 10px;
+          width: 350px;
+          margin-left: 10px;
+      }
+
+      .wrapper .box .item .msg p {
+          padding: 10px;
+      }
+
+      .wrapper .box .item.right {
+          float: right;
+      }
+
+      .wrapper .box .item.right .msg {
+          background: #efefef;
+          color: #333;
+      }
+
+      .wrapper .typing-area {
+          width: 100%;
+          background: #efefef;
+          height: 50px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 10px;
+      }
+
+      .wrapper .typing-area .input-field {
+          width: 100%;
+          position: relative;
+      }
+
+      .wrapper .typing-area .input-field input {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid transparent;
+          border-radius: 3px;
+          outline: none;
+          padding-right: 70px;
+          font-family: 'Poppins', sans-serif;
+          transition: 0.3s all ease;
+      }
+
+      .wrapper .typing-area .input-field input:focus {
+          border-color: #0eaad5;
+      }
+
+      .wrapper .typing-area .input-field button {
+          position: absolute;
+          top: 50%;
+          right: 10px;
+          transform: translateY(-50%);
+          background: transparent;
+          border: 1px solid #0eaad5;
+          padding: 5px 10px;
+          border-radius: 3px;
+          color: #0eaad5;
+          outline: none;
+          cursor: pointer;
+          opacity: 0;
+          pointer-events: none;
+          transition: 0.3s all ease;
+      }
+
+      .wrapper .typing-area .input-field button:hover {
+          background: #0eaad5;
+          color: white;
+      }
+
+      .wrapper .typing-area .input-field input:valid ~ button {
+          opacity: 1;
+          pointer-events: auto;
+      }
+      pre {
+          font-family: inherit;
+          width: 350px !important;
+          white-space: pre-wrap;
+          padding: 8px;
+      }
+      .logo {
+          margin: auto;
+          width: 30%;
+      }
+      .chat-bubble {
+        background-color:#efefef;
+        padding:16px 28px;
+        border-radius: 10px;
+            width: 350px;
+            margin-left: 10px;
+        }
+        .typing {
+        align-items: center;
+        display: flex;
+        height: 17px;
+        }
+        .typing .dot {
+        animation: mercuryTypingAnimation 1.8s infinite ease-in-out;
+        background-color: #0eaad5 ; 
+        border-radius: 50%;
+        height: 7px;
+        margin-right: 4px;
+        vertical-align: middle;
+        width: 7px;
+        display: inline-block;
+        }
+        .typing .dot:nth-child(1) {
+        animation-delay: 200ms;
+        }
+        .typing .dot:nth-child(2) {
+        animation-delay: 300ms;
+        }
+        .typing .dot:nth-child(3) {
+        animation-delay: 400ms;
+        }
+        .typing .dot:last-child {
+        margin-right: 0;
+        }
+
+        @keyframes mercuryTypingAnimation {
+        0% {
+            transform: translateY(0px);
+            background-color:#0eaad5;
+        }
+        28% {
+            transform: translateY(-7px);
+            background-color:#37b1d3;
+        }
+        44% {
+            transform: translateY(0px);
+            background-color: #B5D9CB;
+        }
+        }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="logo">
+          <img src="https://www.acaiaworld.com/wp-content/uploads/2022/12/logo.png" alt="مجتمع أكايا العربي لنهج الذكاء الاصطناعي">
+      </div>
+        <div class="title">Chatbot for using ChatGPT in Python</div>
+        <div class="box" id="chatbot-conversation">
+            <div class="item right">
+                <div class="msg">
+                    <p>How i can help you?</p>
+                </div>
+            </div>
+            
+            
+        </div>
+        
+        <form id="chatbot-form">
+          <div class="typing-area">
+              <div class="input-field">
+                  <input type="text" id="chatbot-input" placeholder="Type your message" required>
+                  <button type="submit">Send</button>
+              </div>
+          </div>
+        </form>
+    </div>
+
+    <!-- Add links to jQuery, Bootstrap, and your custom JavaScript file here -->
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.16.6/dist/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script> -->
+
+  <!-- JavaScript code to handle user input and send it to the backend -->
+    <script>
+      const chatbotForm = document.getElementById('chatbot-form');
+      const chatbotInput = document.getElementById('chatbot-input');
+      const chatbotMessages = document.getElementById('chatbot-conversation');
+
+      chatbotForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        // Get the message from the input field
+        const message = chatbotInput.value;
+        // create sender message element
+
+        // Add the message to the chatbot messages
+        chatbotMessages.innerHTML += `<div class="item"><div class="icon"><i class="fa fa-user"></i></div><div class="msg"><p> ${message} </p></div>`;
+        chatbotMessages.innerHTML += `<div class="item right " id="chat-typing"><div class="chat-bubble msg"><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>`;
+        chatbotInput.setAttribute("disabled", "");
+
+        // Clear the input field
+        chatbotInput.value = '';
+        window.scrollTo(0, document.body.scrollHeight);
+
+        // Send the message to the chatbot and get a response
+        getChatbotResponse(message)
+          .then((response) => {
+            // Add the chatbot's response to the chatbot messages
+            document.getElementById("chat-typing").remove();
+            chatbotMessages.innerHTML += `<div class="item right"><div class="msg"><pre> ${response} </pre></div></div>`;
+            chatbotInput.removeAttribute("disabled");
+            window.scrollTo(0, document.body.scrollHeight);
+            
+
+          });
+      });
+
+      async function getChatbotResponse(message) {
+        // Replace this with your chatbot's logic to generate a response
+        var csrftoken="{{ csrf_token | escapejs }}"
+        try {
+          // Send the message to the chatbot using the fetch function
+          const response = await fetch("chatbot/msg-chatbot", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({ message: message }),
+          });
+
+          // Return the response from the chatbot
+          return await response.text();
+        } catch (e) {
+          console.error(e);
+          return "An error occurred while processing your request.";
+        }
+      }
+
+    </script>
+</body>
+</html>
